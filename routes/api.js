@@ -33,7 +33,7 @@ module.exports = function (app) {
 		}
 		res.json({
 			initNum: parseResultInteger(initNum),
-			initUnit,
+			initUnit: ["l", "L"].indexOf(initUnit) > -1 ? "L" : initUnit.toLowerCase(),
 			returnNum: parseResultInteger(returnNum),
 			returnUnit,
 			string: toString
