@@ -11,31 +11,29 @@ function ConvertHandler() {
 
   this.getNum = function(input) {
 	var html = xss(input);
-	// return every number in an array - if none exits return [1]
-	var numArr = html.match(/^\d?.*\d/) || [1];
-	// check every number in regex array and return false if any of them are not numbers
-	var isNumeric = !!numArr.filter(item => !isNaN(parseFloat(item)) && isFinite(item)).length;
+
+	var numArr = ((html.match(/^\d?.*\d/) || [])[0] || "1").split("/");
+	var isNumeric = numArr.length < 3 && !!numArr.filter(item => !isNaN(parseFloat(item)) && isFinite(item)).length;
 	var result = isNumeric ? eval(numArr.join("/")) : null;
 
     return result;
   };
 
   this.getUnit = function(input) {
-    var result = input.split((input.match(/^\d?.*\d/) || [])[0])[1] || input;
-
-    return this.getReturnUnit(result) ? result : undefined;
+	var result = input.split((input.match(/^\d?.*\d/) || [])[0])[1] || input;
+    return this.getReturnUnit(result) ? result : null;
   };
 
   this.getReturnUnit = function(initUnit) {
 	var returnUnit = {
 		mi: "km",
-		gal: "L",
+		gal: "l",
 		lbs: "kg",
 		km: "mi",
-		L: "gal",
+		l: "gal",
 		kg: "lbs"
 	};
-    var result = returnUnit[initUnit];
+    var result = returnUnit[initUnit.toLowerCase()];
 
     return result;
   };
@@ -46,10 +44,10 @@ function ConvertHandler() {
 		km: "kilometers",
 		lbs: "pounds",
 		kg: "kilograms",
-		L: "liter",
+		l: "liter",
 		gal: "gallon"
 	};
-    var result = unitSpell[unit];
+    var result = unitSpell[unit.toLowerCase()];
 
     return result;
   };
@@ -65,13 +63,12 @@ function ConvertHandler() {
 		gal: galToL,
 		lbs: lbsToKg,
 		mi: miToKm,
-		L: LToGal,
+		l: LToGal,
 		kg: kgToLbs,
 		km: kmToMi
 	};
 
-    var result = (initNum * coefficient[initUnit]);
-
+    var result = (initNum * coefficient[initUnit.toLowerCase()]);
     return result;
   };
 
